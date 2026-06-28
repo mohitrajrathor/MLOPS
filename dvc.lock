@@ -13,21 +13,21 @@ stages:
       size: 1180
     params:
       params.yaml:
-        prepare.augment_factor: 1
-        prepare.noise_std: 0.05
+        prepare.augment_factor: 2
+        prepare.noise_std: 0.08
         prepare.random_state: 42
     outs:
     - path: data/iris_prepared.csv
       hash: md5
-      md5: 8bf86ae5adb6bb39db5e2ebe2926e886
-      size: 14151
+      md5: 4f1fc3e1cf6be2af3b9be92fd336d85f
+      size: 25508
   train:
     cmd: python3 src/train.py
     deps:
     - path: data/iris_prepared.csv
       hash: md5
-      md5: 8bf86ae5adb6bb39db5e2ebe2926e886
-      size: 14151
+      md5: 4f1fc3e1cf6be2af3b9be92fd336d85f
+      size: 25508
     - path: src/train.py
       hash: md5
       md5: 770ba800ddb9f95dc51d60dddb7718a2
@@ -35,15 +35,15 @@ stages:
     params:
       params.yaml:
         train.max_depth: 5
-        train.n_estimators: 50
+        train.n_estimators: 100
         train.random_state: 42
         train.test_size: 0.2
     outs:
     - path: metrics.json
       hash: md5
-      md5: 57163e8e65ecf6e5c9446aa408098040
+      md5: ea7fc639967f66ffde5e67a677e2d744
       size: 70
     - path: models/model.pkl
       hash: md5
-      md5: e84b6932bb9d8826353a19f1896c541d
-      size: 94705
+      md5: c200dd96a117a9f3bd5d2ff174534ae8
+      size: 205041
