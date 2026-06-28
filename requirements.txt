@@ -1,0 +1,6 @@
+scikit-learn
+pandas
+numpy
+dvc
+dvc-gs
+pyyaml
