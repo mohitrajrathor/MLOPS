@@ -1,0 +1,8 @@
+name: training pipeline
+
+on:
+    push:
+        branches: [week_4]
+
+jobs: 
+    test: 
