@@ -7,6 +7,10 @@ from sklearn.impute import SimpleImputer
 from sklearn.compose import ColumnTransformer
 from sklearn.pipeline import Pipeline
 import argparse
+from pathlib import Path
+
+
+PROJECT_ROOT = Path(__file__).resolve().parents[1]
 
 
 
@@ -32,6 +36,15 @@ def remove_outliers(df):
 
 def prepare(data_path: str, save_dir: str):
     '''Data preparation func'''
+
+    data_path = Path(data_path)
+    if not data_path.is_absolute():
+        data_path = PROJECT_ROOT / data_path
+
+    save_dir = Path(save_dir)
+    if not save_dir.is_absolute():
+        save_dir = PROJECT_ROOT / save_dir
+    save_dir.mkdir(parents=True, exist_ok=True)
 
     print("Data preparation starting...")
     df = pd.read_csv(data_path)
@@ -68,12 +81,15 @@ def prepare(data_path: str, save_dir: str):
     print("Scaled and onehot encoded [Done]")
 
 
-    np.save(save_dir + "/prepared_data.npy", X)
-    np.save(save_dir + "/prepared_target.npy", y)
+    prepared_data_path = save_dir / "prepared_data.npy"
+    prepared_target_path = save_dir / "prepared_target.npy"
+
+    np.save(prepared_data_path, X)
+    np.save(prepared_target_path, y)
 
     print("data prepared successfully and saved at following locations:")
-    print(save_dir + "/prepared_data.npy")
-    print(save_dir + "/prepared_target.npy")
+    print(prepared_data_path)
+    print(prepared_target_path)
 
 
 

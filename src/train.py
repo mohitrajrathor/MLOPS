@@ -5,9 +5,13 @@ import mlflow
 import mlflow.sklearn
 import argparse
 import os
+from pathlib import Path
 from sklearn.tree import DecisionTreeClassifier
 from sklearn.model_selection import train_test_split
 from sklearn.metrics import accuracy_score, precision_score, f1_score
+
+
+PROJECT_ROOT = Path(__file__).resolve().parents[1]
 
 
 def train(max_depth: int, min_samples_split: int, experiment_name: str) -> None:
@@ -19,9 +23,10 @@ def train(max_depth: int, min_samples_split: int, experiment_name: str) -> None:
         experiment_name: MLflow experiment name.
     """
     # load prepared data
+    data_dir = PROJECT_ROOT / "data" / "processed"
     try:
-        X = np.load("data/processed/prepared_data.npy")
-        y = np.load("data/processed/prepared_target.npy")
+        X = np.load(data_dir / "prepared_data.npy")
+        y = np.load(data_dir / "prepared_target.npy")
     except FileNotFoundError as e:
         raise FileNotFoundError(f"Prepared data not found: {e}") from e
 
@@ -50,8 +55,9 @@ def train(max_depth: int, min_samples_split: int, experiment_name: str) -> None:
         mlflow.log_metric("f1_score", f1)
 
         # save model locally with joblib
-        os.makedirs("artifacts", exist_ok=True)
-        model_path = "artifacts/model.joblib"
+        artifacts_dir = PROJECT_ROOT / "artifacts"
+        os.makedirs(artifacts_dir, exist_ok=True)
+        model_path = artifacts_dir / "model.joblib"
         joblib.dump(model, model_path)
 
         # log model to MLflow registry
