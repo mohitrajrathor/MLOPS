@@ -8,6 +8,7 @@ on:
 env:
   IMAGE: ${{ secrets.GAR_LOCATION }}-docker.pkg.dev/${{ secrets.GCP_PROJECT_ID }}/${{ secrets.GAR_REPOSITORY }}/iris-inference-mlops-week-6:${{ github.sha }}
 
+  
 jobs:
   deploy:
     runs-on: ubuntu-latest
