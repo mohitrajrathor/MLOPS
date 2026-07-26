@@ -14,6 +14,13 @@ spec:
     spec:
       containers:
       - name: iris-inference
-        image: iris-inference-mlops-week-6:latest
+        image: us-central1-docker.pkg.dev/project-72f1e089-301b-4e5c-b15/iris-repo-mlops/iris-inference-mlops-week-6:latest
         ports:
           - containerPort: 8100
+        resources:
+          requests:
+            memory: "512Mi"
+            cpu: "250m"
+          limits:
+            memory: "1Gi"
+            cpu: "500m"

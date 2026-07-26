@@ -45,6 +45,6 @@ jobs:
 
       - run: kubectl set image deployment/iris-inference iris-inference=$IMAGE
 
-      - run: kubectl rollout status deployment/iris-inference --timeout=5m
+      # - run: kubectl rollout status deployment/iris-inference --timeout=5m
 
-      # - run: kubectl rollout status deployment/iris-inference
+      - run: kubectl rollout status deployment/iris-inference
