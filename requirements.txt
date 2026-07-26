@@ -1,6 +1,6 @@
 pandas
 numpy
 scikit-learn
-matplotlib
-pytest
-mlflow
+fastapi[all]
+uvicorn
+joblib

@@ -1,0 +1,19 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: iris-inference
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: iris-inference
+  template:
+    metadata:
+      labels:
+        app: iris-inference
+    spec:
+      containers:
+      - name: iris-inference
+        image: iris-inference-mlops-week-6:latest
+        ports:
+          - containerPort: 8100
