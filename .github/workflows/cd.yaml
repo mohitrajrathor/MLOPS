@@ -16,7 +16,7 @@ jobs:
       contents: read
       id-token: write
 
-      
+
     steps:
       - uses: actions/checkout@v4
 
@@ -67,6 +67,7 @@ jobs:
             sleep 15
           done
 
+          
       - name: Run wrk stress test
         run: |
           cat > /tmp/post.lua << 'EOF'
