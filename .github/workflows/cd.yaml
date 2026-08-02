@@ -3,12 +3,11 @@ name: CD to GKE
 on:
   push:
     branches:
-      - week_6
+      - week_7
 
 env:
-  IMAGE: ${{ secrets.GAR_LOCATION }}-docker.pkg.dev/${{ secrets.GCP_PROJECT_ID }}/${{ secrets.GAR_REPOSITORY }}/iris-inference-mlops-week-6:${{ github.sha }}
+  IMAGE: ${{ secrets.GAR_LOCATION }}-docker.pkg.dev/${{ secrets.GCP_PROJECT_ID }}/${{ secrets.GAR_REPOSITORY }}/iris-inference-mlops-week-7:${{ github.sha }}
 
-  
 jobs:
   deploy:
     runs-on: ubuntu-latest
@@ -46,6 +45,32 @@ jobs:
 
       - run: kubectl set image deployment/iris-inference iris-inference=$IMAGE
 
-      # - run: kubectl rollout status deployment/iris-inference --timeout=5m
+      - run: kubectl rollout status deployment/iris-inference --timeout=5m
 
-      - run: kubectl rollout status deployment/iris-inference
+      - name: Install wrk
+        run: |
+          sudo apt-get update -y
+          sudo apt-get install -y wrk
+
+      - name: Get External IP
+        run: |
+          echo "Waiting for external IP..."
+          for i in $(seq 1 20); do
+            IP=$(kubectl get svc iris-inference-service -o jsonpath='{.status.loadBalancer.ingress[0].ip}')
+            if [ -n "$IP" ]; then
+              echo "EXTERNAL_IP=$IP" >> $GITHUB_ENV
+              echo "Found IP: $IP"
+              break
+            fi
+            echo "Attempt $i: IP not ready, retrying in 15s..."
+            sleep 15
+          done
+
+      - name: Run wrk stress test
+        run: |
+          echo "Running stress test against http://$EXTERNAL_IP/predict/"
+          wrk -t4 -c1000 -d30s -s - http://$EXTERNAL_IP/predict/ <<'EOF'
+          wrk.method = "POST"
+          wrk.headers["Content-Type"] = "application/json"
+          wrk.body = '{"sepal_length":5.1,"sepal_width":3.5,"petal_length":1.4,"petal_width":0.2}'
+          EOF
