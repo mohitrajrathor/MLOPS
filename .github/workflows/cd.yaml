@@ -68,9 +68,11 @@ jobs:
 
       - name: Run wrk stress test
         run: |
-          echo "Running stress test against http://$EXTERNAL_IP/predict/"
-          wrk -t4 -c1000 -d30s -s - http://$EXTERNAL_IP/predict/ <<'EOF'
+          cat > /tmp/post.lua << 'EOF'
           wrk.method = "POST"
           wrk.headers["Content-Type"] = "application/json"
           wrk.body = '{"sepal_length":5.1,"sepal_width":3.5,"petal_length":1.4,"petal_width":0.2}'
           EOF
+
+          echo "Running stress test against http://$EXTERNAL_IP/predict/"
+          wrk -t4 -c1000 -d30s -s /tmp/post.lua http://$EXTERNAL_IP/predict/
