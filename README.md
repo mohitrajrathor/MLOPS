@@ -1,1 +1,1 @@
-# 22f3003109_MLOPS_WEEKLY_ASSIGNMENT
+# MLops course Assignments & Notes
